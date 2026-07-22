@@ -45,7 +45,7 @@
             display: flex;
         }
         
-        /* 1. Intro Ekranı */
+        /* Intro Ekranı */
         .intro-title {
             font-size: 28px;
             background: linear-gradient(135deg, #3b82f6, #a855f7);
@@ -144,7 +144,6 @@
             text-align: center;
         }
 
-        /* Bilgi Kutuları */
         .info-box {
             background: rgba(30, 41, 59, 0.6);
             border: 1px solid rgba(139, 92, 246, 0.3);
@@ -179,7 +178,7 @@
         </div>
     </div>
 
-    <!-- 3. Oyun Ekranı -->
+    <!-- 3. Oyun Ekranı (6 Işık) -->
     <div id="gameScreen" class="screen">
         <div class="score-board">Skor: <span id="score">0</span></div>
         
@@ -220,7 +219,7 @@
 
 </div>
 
-<!-- Belirttiğin Şarkı Dosyası -->
+<!-- Şarkı Dosyası -->
 <audio id="bgMusic" src="kisabirara.m4a" loop></audio>
 
 <script>
@@ -242,19 +241,18 @@
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         const target = document.getElementById(screenId);
         if (target) target.classList.add('active');
-
-        // Oyuna girildiğinde veya menüde müziğin çalması sağlanıyor
-        if (screenId === 'gameScreen' || screenId === 'menuScreen') {
-            bgMusic.play().catch(e => console.log("Tarayıcı otomatik ses engeline takıldı:", e));
-        }
     }
 
     function startNewGame() {
         showScreen('gameScreen');
         sequence = [];
         score = 0;
+        isPlaying = true;
         document.getElementById("score").innerText = score;
-        bgMusic.play().catch(e => {});
+        
+        // Tarayıcı kısıtlamasını aşmak için tıklama anında müzik başlatılır
+        bgMusic.play().catch(e => console.log("Müzik çalma hatası:", e));
+        
         nextRound();
     }
 
@@ -263,6 +261,7 @@
         canClick = false;
         document.getElementById("message").innerText = "Işıkları izle...";
         
+        // 6 ışıktan (0 ila 5 arası) rastgele birini ekle
         const randomPad = Math.floor(Math.random() * 6);
         sequence.push(randomPad);
 
@@ -286,10 +285,12 @@
     function flashPad(index) {
         const padElements = document.querySelectorAll('.pad');
         const pad = padElements[index];
-        pad.classList.add('active');
-        setTimeout(() => {
-            pad.classList.remove('active');
-        }, 300);
+        if(pad) {
+            pad.classList.add('active');
+            setTimeout(() => {
+                pad.classList.remove('active');
+            }, 300);
+        }
     }
 
     function handlePadClick(index) {
@@ -315,6 +316,7 @@
     }
 
     function gameOver() {
+        isPlaying = false;
         canClick = false;
         document.getElementById("message").innerText = "Yanlış! Skorun: " + score;
         setTimeout(() => {
