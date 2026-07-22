@@ -29,61 +29,61 @@
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
-            padding: 30px 20px;
+            padding: 25px 20px;
+            overflow: hidden;
         }
+        .screen {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .screen.active {
+            display: flex;
+        }
+        
+        /* 1. Intro Ekranı */
+        .intro-title {
+            font-size: 28px;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInOut 2s ease forwards;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: scale(0.9); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; }
+        }
+
+        /* Menü ve Diğer Ekranlar */
         h1 {
             font-size: 26px;
             background: linear-gradient(135deg, #3b82f6, #a855f7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
         }
-        .score-board {
-            font-size: 18px;
-            color: #38bdf8;
-            font-weight: 600;
+        .subtitle {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 25px;
         }
-        .pad-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            width: 260px;
-            height: 260px;
-        }
-        .pad {
-            border-radius: 20px;
-            cursor: pointer;
-            opacity: 0.5;
-            transition: transform 0.1s, opacity 0.2s, box-shadow 0.2s;
-            border: 2px solid rgba(255,255,255,0.1);
-        }
-        .pad:active {
-            transform: scale(0.95);
-        }
-        /* İstenen renkler */
-        .pad.purple { background-color: #a855f7; }
-        .pad.blue { background-color: #3b82f6; }
-        .pad.green { background-color: #22c55e; }
-        .pad.red { background-color: #ef4444; }
-
-        /* Aktif (yanma) durumları */
-        .pad.purple.active { opacity: 1; box-shadow: 0 0 25px #a855f7; transform: scale(1.03); }
-        .pad.blue.active { opacity: 1; box-shadow: 0 0 25px #3b82f6; transform: scale(1.03); }
-        .pad.green.active { opacity: 1; box-shadow: 0 0 25px #22c55e; transform: scale(1.03); }
-        .pad.red.active { opacity: 1; box-shadow: 0 0 25px #ef4444; transform: scale(1.03); }
-
-        .message {
-            font-size: 16px;
-            color: #c084fc;
-            min-height: 24px;
-            font-weight: 600;
-            text-align: center;
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 80%;
         }
         .game-btn {
             background: linear-gradient(135deg, #3b82f6, #9333ea);
             color: white;
             border: none;
-            padding: 12px 30px;
-            font-size: 18px;
+            padding: 12px 20px;
+            font-size: 16px;
             font-family: 'Fredoka', sans-serif;
             border-radius: 12px;
             cursor: pointer;
@@ -91,39 +91,170 @@
             transition: transform 0.2s;
         }
         .game-btn:hover { transform: translateY(-2px); }
+        .game-btn.secondary {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        /* Oyun Alanı (6 Işık - 3x2 Grid) */
+        .score-board {
+            font-size: 18px;
+            color: #38bdf8;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .pad-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            width: 320px;
+            height: 220px;
+            margin-bottom: 15px;
+        }
+        .pad {
+            border-radius: 16px;
+            cursor: pointer;
+            opacity: 0.4;
+            transition: transform 0.1s, opacity 0.2s, box-shadow 0.2s;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .pad:active { transform: scale(0.95); }
+
+        /* 6 Renk Tanımı */
+        .pad.purple { background-color: #a855f7; }
+        .pad.blue { background-color: #3b82f6; }
+        .pad.green { background-color: #22c55e; }
+        .pad.red { background-color: #ef4444; }
+        .pad.yellow { background-color: #eab308; }
+        .pad.pink { background-color: #ec4899; }
+
+        /* Aktif Yanma Efektleri */
+        .pad.purple.active { opacity: 1; box-shadow: 0 0 20px #a855f7; transform: scale(1.05); }
+        .pad.blue.active { opacity: 1; box-shadow: 0 0 20px #3b82f6; transform: scale(1.05); }
+        .pad.green.active { opacity: 1; box-shadow: 0 0 20px #22c55e; transform: scale(1.05); }
+        .pad.red.active { opacity: 1; box-shadow: 0 0 20px #ef4444; transform: scale(1.05); }
+        .pad.yellow.active { opacity: 1; box-shadow: 0 0 20px #eab308; transform: scale(1.05); }
+        .pad.pink.active { opacity: 1; box-shadow: 0 0 20px #ec4899; transform: scale(1.05); }
+
+        .message {
+            font-size: 15px;
+            color: #c084fc;
+            min-height: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Bilgi Kutuları */
+        .info-box {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            width: 85%;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #e2e8f0;
+            margin-bottom: 20px;
+            text-align: left;
+        }
     </style>
 </head>
 <body>
 
 <div class="game-container">
-    <h1>Hafıza Işıkları</h1>
-    <div class="score-board">Skor: <span id="score">0</span></div>
-    
-    <div class="pad-grid">
-        <div class="pad purple" onclick="handlePadClick(0)"></div>
-        <div class="pad blue" onclick="handlePadClick(1)"></div>
-        <div class="pad green" onclick="handlePadClick(2)"></div>
-        <div class="pad red" onclick="handlePadClick(3)"></div>
+
+    <!-- 1. Intro Ekranı -->
+    <div id="introScreen" class="screen active">
+        <h1 class="intro-title">Beton Archive Sunar</h1>
     </div>
 
-    <div class="message" id="message">Başlamak için butona bas!</div>
-    <button class="game-btn" id="startBtn" onclick="startGame()">Oyunu Başlat</button>
+    <!-- 2. Ana Menü Ekranı -->
+    <div id="menuScreen" class="screen">
+        <h1>Hafıza Işıkları</h1>
+        <p class="subtitle">Beton Archive Stüdyosu</p>
+        <div class="menu-buttons">
+            <button class="game-btn" onclick="startNewGame()">🎮 Oyuna Başla</button>
+            <button class="game-btn secondary" onclick="showScreen('howToPlayScreen')">❓ Nasıl Oynanır</button>
+            <button class="game-btn secondary" onclick="showScreen('leaderboardScreen')">🏆 Sıralama</button>
+        </div>
+    </div>
+
+    <!-- 3. Oyun Ekranı -->
+    <div id="gameScreen" class="screen">
+        <div class="score-board">Skor: <span id="score">0</span></div>
+        
+        <div class="pad-grid">
+            <div class="pad purple" onclick="handlePadClick(0)"></div>
+            <div class="pad blue" onclick="handlePadClick(1)"></div>
+            <div class="pad green" onclick="handlePadClick(2)"></div>
+            <div class="pad red" onclick="handlePadClick(3)"></div>
+            <div class="pad yellow" onclick="handlePadClick(4)"></div>
+            <div class="pad pink" onclick="handlePadClick(5)"></div>
+        </div>
+
+        <div class="message" id="message">Işıkları dikkatle izle...</div>
+        <button class="game-btn secondary" style="padding: 8px 16px; font-size: 14px;" onclick="showScreen('menuScreen')">⬅ Menü</button>
+    </div>
+
+    <!-- 4. Nasıl Oynanır Ekranı -->
+    <div id="howToPlayScreen" class="screen">
+        <h2>Nasıl Oynanır?</h2>
+        <div class="info-box">
+            <p>1. Oyun sırayla yanıp sönen ışık dizilimini gösterir.</p>
+            <p>2. Sen de aynı sırayla 6 renkli butona dokunmalısın.</p>
+            <p>3. Her başarılı turda dizi uzar ve skorun artar. Yanlış tuşa basarsan oyun biter!</p>
+        </div>
+        <button class="game-btn secondary" onclick="showScreen('menuScreen')">⬅ Ana Menü</button>
+    </div>
+
+    <!-- 5. Sıralama Ekranı -->
+    <div id="leaderboardScreen" class="screen">
+        <h2>En Yüksek Puanlar</h2>
+        <div class="info-box">
+            <p>1. KRI Master - 120 Puan</p>
+            <p>2. Beton Fan - 90 Puan</p>
+            <p>3. Rhythm King - 60 Puan</p>
+        </div>
+        <button class="game-btn secondary" onclick="showScreen('menuScreen')">⬅ Ana Menü</button>
+    </div>
+
 </div>
 
+<!-- Belirttiğin Şarkı Dosyası -->
+<audio id="bgMusic" src="kisabirara.m4a" loop></audio>
+
 <script>
-    const pads = ['purple', 'blue', 'green', 'red'];
+    const pads = ['purple', 'blue', 'green', 'red', 'yellow', 'pink'];
     let sequence = [];
     let playerSequence = [];
     let score = 0;
     let isPlaying = false;
     let canClick = false;
+    const bgMusic = document.getElementById("bgMusic");
 
-    function startGame() {
+    window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+            showScreen('menuScreen');
+        }, 2200);
+    });
+
+    window.showScreen = function(screenId) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        const target = document.getElementById(screenId);
+        if (target) target.classList.add('active');
+
+        // Oyuna girildiğinde veya menüde müziğin çalması sağlanıyor
+        if (screenId === 'gameScreen' || screenId === 'menuScreen') {
+            bgMusic.play().catch(e => console.log("Tarayıcı otomatik ses engeline takıldı:", e));
+        }
+    }
+
+    function startNewGame() {
+        showScreen('gameScreen');
         sequence = [];
         score = 0;
         document.getElementById("score").innerText = score;
-        document.getElementById("startBtn").style.display = "none";
-        isPlaying = true;
+        bgMusic.play().catch(e => {});
         nextRound();
     }
 
@@ -132,8 +263,7 @@
         canClick = false;
         document.getElementById("message").innerText = "Işıkları izle...";
         
-        // Rastgele yeni bir renk ekle (0: mor, 1: mavi, 2: yeşil, 3: kırmızı)
-        const randomPad = Math.floor(Math.random() * 4);
+        const randomPad = Math.floor(Math.random() * 6);
         sequence.push(randomPad);
 
         playSequence();
@@ -150,7 +280,7 @@
                 canClick = true;
                 document.getElementById("message").innerText = "Sıra sende! Tekrarla.";
             }
-        }, 700);
+        }, 650);
     }
 
     function flashPad(index) {
@@ -159,7 +289,7 @@
         pad.classList.add('active');
         setTimeout(() => {
             pad.classList.remove('active');
-        }, 350);
+        }, 300);
     }
 
     function handlePadClick(index) {
@@ -170,13 +300,11 @@
 
         const currentIndex = playerSequence.length - 1;
 
-        // Doğru bastı mı kontrol et
         if (playerSequence[currentIndex] !== sequence[currentIndex]) {
             gameOver();
             return;
         }
 
-        // Seviye tamamlandı mı?
         if (playerSequence.length === sequence.length) {
             canClick = false;
             score += 10;
@@ -187,14 +315,14 @@
     }
 
     function gameOver() {
-        isPlaying = false;
         canClick = false;
-        document.getElementById("message").innerText = "Yanlışş! Skorun: " + score;
-        document.getElementById("startBtn").style.display = "block";
-        document.getElementById("startBtn").innerText = "Yeniden Dene";
+        document.getElementById("message").innerText = "Yanlış! Skorun: " + score;
+        setTimeout(() => {
+            showScreen('menuScreen');
+        }, 2000);
     }
 </script>
 
 </body>
-  </html>
-      
+    </html>
+    
