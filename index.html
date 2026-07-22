@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beton Archive - Hafıza Işıkları</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: linear-gradient(135deg, #0d0f18 0%, #171c2d 100%);
+            font-family: 'Fredoka', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+        .game-container {
+            position: relative;
+            width: 400px;
+            height: 600px;
+            background: #0f172a;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px 20px;
+        }
+        h1 {
+            font-size: 26px;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .score-board {
+            font-size: 18px;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+        .pad-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 260px;
+            height: 260px;
+        }
+        .pad {
+            border-radius: 20px;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: transform 0.1s, opacity 0.2s, box-shadow 0.2s;
+            border: 2px solid rgba(255,255,255,0.1);
+        }
+        .pad:active {
+            transform: scale(0.95);
+        }
+        /* İstenen renkler */
+        .pad.purple { background-color: #a855f7; }
+        .pad.blue { background-color: #3b82f6; }
+        .pad.green { background-color: #22c55e; }
+        .pad.red { background-color: #ef4444; }
+
+        /* Aktif (yanma) durumları */
+        .pad.purple.active { opacity: 1; box-shadow: 0 0 25px #a855f7; transform: scale(1.03); }
+        .pad.blue.active { opacity: 1; box-shadow: 0 0 25px #3b82f6; transform: scale(1.03); }
+        .pad.green.active { opacity: 1; box-shadow: 0 0 25px #22c55e; transform: scale(1.03); }
+        .pad.red.active { opacity: 1; box-shadow: 0 0 25px #ef4444; transform: scale(1.03); }
+
+        .message {
+            font-size: 16px;
+            color: #c084fc;
+            min-height: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .game-btn {
+            background: linear-gradient(135deg, #3b82f6, #9333ea);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            font-family: 'Fredoka', sans-serif;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(147, 51, 234, 0.4);
+            transition: transform 0.2s;
+        }
+        .game-btn:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>Hafıza Işıkları</h1>
+    <div class="score-board">Skor: <span id="score">0</span></div>
+    
+    <div class="pad-grid">
+        <div class="pad purple" onclick="handlePadClick(0)"></div>
+        <div class="pad blue" onclick="handlePadClick(1)"></div>
+        <div class="pad green" onclick="handlePadClick(2)"></div>
+        <div class="pad red" onclick="handlePadClick(3)"></div>
+    </div>
+
+    <div class="message" id="message">Başlamak için butona bas!</div>
+    <button class="game-btn" id="startBtn" onclick="startGame()">Oyunu Başlat</button>
+</div>
+
+<script>
+    const pads = ['purple', 'blue', 'green', 'red'];
+    let sequence = [];
+    let playerSequence = [];
+    let score = 0;
+    let isPlaying = false;
+    let canClick = false;
+
+    function startGame() {
+        sequence = [];
+        score = 0;
+        document.getElementById("score").innerText = score;
+        document.getElementById("startBtn").style.display = "none";
+        isPlaying = true;
+        nextRound();
+    }
+
+    function nextRound() {
+        playerSequence = [];
+        canClick = false;
+        document.getElementById("message").innerText = "Işıkları izle...";
+        
+        // Rastgele yeni bir renk ekle (0: mor, 1: mavi, 2: yeşil, 3: kırmızı)
+        const randomPad = Math.floor(Math.random() * 4);
+        sequence.push(randomPad);
+
+        playSequence();
+    }
+
+    function playSequence() {
+        let i = 0;
+        const interval = setInterval(() => {
+            if (i < sequence.length) {
+                flashPad(sequence[i]);
+                i++;
+            } else {
+                clearInterval(interval);
+                canClick = true;
+                document.getElementById("message").innerText = "Sıra sende! Tekrarla.";
+            }
+        }, 700);
+    }
+
+    function flashPad(index) {
+        const padElements = document.querySelectorAll('.pad');
+        const pad = padElements[index];
+        pad.classList.add('active');
+        setTimeout(() => {
+            pad.classList.remove('active');
+        }, 350);
+    }
+
+    function handlePadClick(index) {
+        if (!isPlaying || !canClick) return;
+
+        flashPad(index);
+        playerSequence.push(index);
+
+        const currentIndex = playerSequence.length - 1;
+
+        // Doğru bastı mı kontrol et
+        if (playerSequence[currentIndex] !== sequence[currentIndex]) {
+            gameOver();
+            return;
+        }
+
+        // Seviye tamamlandı mı?
+        if (playerSequence.length === sequence.length) {
+            canClick = false;
+            score += 10;
+            document.getElementById("score").innerText = score;
+            document.getElementById("message").innerText = "Harika! Sonraki seviye...";
+            setTimeout(nextRound, 1200);
+        }
+    }
+
+    function gameOver() {
+        isPlaying = false;
+        canClick = false;
+        document.getElementById("message").innerText = "Yanlışş! Skorun: " + score;
+        document.getElementById("startBtn").style.display = "block";
+        document.getElementById("startBtn").innerText = "Yeniden Dene";
+    }
+</script>
+
+</body>
+  </html>
+      
